@@ -1,22 +1,3 @@
-<?php
- // Inicia o buffer de saída
-ob_start();
-
-// Inicia a sessão apenas se ainda não tiver sido iniciada
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Verifica se as variáveis de sessão estão definidas
-if (!isset($_SESSION['loginUser'])) {
-    // Redireciona para a página inicial com a mensagem de acesso negado
-    header("Location: ../index.php?acao=negado");
-    exit;
-}
-
-// Inclui o script de saída
-include_once('sair.php');
-?>
 <!DOCTYPE html>
 <html lang="pt_br">
 <head>
@@ -52,38 +33,7 @@ include_once('sair.php');
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-<?php
-include_once('../config/conexao.php');
-$usuarioLogado = $_SESSION['loginUser'];
 
-$selectUser = "SELECT * FROM tb_user WHERE email_user=:emailUserLogado";
-
-try {
-    $resultadoUser = $conect->prepare($selectUser);
-    $resultadoUser->bindParam(':emailUserLogado', $usuarioLogado, PDO::PARAM_STR);
-    $resultadoUser->execute();
-
-    $contar = $resultadoUser->rowCount();
-    if ($contar > 0) {
-        $show = $resultadoUser->fetch(PDO::FETCH_OBJ);
-        
-        // Variáveis do usuário logado
-        $id_user = $show->id_user;
-        $foto_user = $show->foto_user;
-        $nome_user = $show->nome_user;
-        $senha_user = $show->senha_user;
-        $email_user = $show->email_user;
-    } else {
-        echo '<div class="alert alert-danger"><strong>Aviso!</strong> Não há dados de perfil :(</div>';
-    }
-} catch (PDOException $e) {
-    // Log the error message instead of displaying it to the user
-    error_log("ERRO DE LOGIN DO PDO: " . $e->getMessage());
-    echo '<div class="alert alert-danger"><strong>Aviso!</strong> Ocorreu um erro ao tentar acessar os dados do perfil.</div>';
-}
-
-
-?>
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
