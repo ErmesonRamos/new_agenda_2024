@@ -31,39 +31,51 @@
                   </thead>
                   <tbody>
                   
-                                      
-                    <tr>
-                      <td>1</td>
-                      <td>
-                      <img src="images/">
-                     </td>
-                      <td>Leandro Costa</td>
-                      <td>85991446498</td>
-                      <td>francisco.silva92@prof.ce.gov.br</td>
-                      
-                      <td>
-                      <div class="btn-group">
-                        <a href="home.php?acao=editar&id=<?php echo $show->id_contatos;?>" class="btn btn-success" title="Editar Contato"><i class="fas fa-user-edit"></i></button>
-                        <a href="conteudo/del-contato.php?idDel=<?php echo $show->id_contatos;?>" onclick="return confirm('Deseja remover o contato')" class="btn btn-danger" title="Remover Contato"><i class="fas fa-user-times"></i></a>
-                      </div>
-                      </td>
-                    </tr>
+                   
                    
                   </tbody>
-                  <tfoot>
-                  <tr>
-                    <th>#</th>
-                    <th>Foto</th>
-                    <th>Nome</th>
-                    <th>Telefone</th>
-                    <th>E-mail</th>
-                    <th>Ações</th>
-                  </tr>
-                  </tfoot>
-                </table>
-                <div class="col-lg-12 d-flex justify-content-center">
-                  <a href="conteudo/relatoriopdf.php?id=<?php echo $id_user;?>" class="btn btn-lg btn-primary">Gerar relatório completo</a>
-                </div>
+                  <?php
+$select = "SELECT * FROM tb_contatos ORDER BY id_contatos DESC";
+try {
+    $result = $conect->prepare($select);
+    $cont = 1;
+    $result->execute();
+
+    $contar = $result->rowCount();
+    if ($contar > 0) {
+        while ($show = $result->FETCH(PDO::FETCH_OBJ)) {
+?>
+        <tr>
+            <td><?php echo $cont++;?></td>
+            <td>
+            <?php
+            // Verifica se a variável $foto_user é igual a 'avatar-padrao.png'
+            if ($show->foto_contatos == 'avatar-padrao.png') {
+                // Exibe a imagem do avatar padrão
+                echo '<img src="../img/avatar_p/' . $show->foto_contatos . '" alt="' . $show->foto_contatos . '" title="' . $show->foto_contatos . '" style="width: 50px; border-radius: 100%;">';
+            } else {
+                // Exibe a imagem do usuário
+                echo '<img src="../img/cont/' . $show->foto_contatos . '" alt="' . $show->foto_contatos . '" title="' . $show->foto_contatos . '" style="width: 50px; border-radius: 100%;">';
+            }
+            ?>  
+           </td>
+            <td><?php echo $show->nome_contatos;?></td>
+            <td><?php echo $show->fone_contatos;?></td>
+            <td><?php echo $show->email_contatos;?></td>
+            <td>
+            <div class="btn-group">
+                <a href="home.php?acao=editar&id=<?php echo $show->id_contatos;?>" class="btn btn-success" title="Editar Contato"><i class="fas fa-user-edit"></i></a>
+                <a href="conteudo/del-contato.php?idDel=<?php echo $show->id_contatos;?>" onclick="return confirm('Deseja remover o contato')" class="btn btn-danger" title="Remover Contato"><i class="fas fa-user-times"></i></a>
+            </div>
+            </td>
+        </tr>
+<?php
+        }
+    }
+} catch (PDOException $e) {
+    echo '<strong>ERRO DE PDO= </strong>' . $e->getMessage();
+}
+?>
                 </div>
               <!-- /.card-body -->
             </div>
